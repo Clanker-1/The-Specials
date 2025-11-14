@@ -1,4 +1,4 @@
-// Main Global variables and core logic the specials
+// Main Global variables and core logic by the specials
 Tank playerTank;
 ArrayList<Bullet> bullets = new ArrayList<Bullet>();
 ArrayList<EnemyTank> enemies = new ArrayList<EnemyTank>();
@@ -100,7 +100,7 @@ void mousePressed() {
   }
 }
 
-// Wall Class Definition (kept in Main for simplicity)
+// Wall Class Definition
 class Wall {
   float x, y, w, h;
 
