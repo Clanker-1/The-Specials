@@ -73,7 +73,7 @@ void draw() {
       }
     }
     
-    // Remove bullets that go off-screen or hit something
+    // Remove bullets that go off-screen
     if (b.isOffScreen() || hitWall || hitTank) {
       bullets.remove(i);
     }
@@ -100,7 +100,7 @@ void mousePressed() {
   }
 }
 
-// Wall Class Definition (kept in Main for simplicity)
+// Wall Class Definition 
 class Wall {
   float x, y, w, h;
 
