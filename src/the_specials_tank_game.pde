@@ -1,4 +1,4 @@
-// Main Global variables and core logic the specials
+//by the specials
 Tank playerTank;
 ArrayList<Bullet> bullets = new ArrayList<Bullet>();
 ArrayList<EnemyTank> enemies = new ArrayList<EnemyTank>();
