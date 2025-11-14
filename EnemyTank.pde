@@ -1,0 +1,39 @@
+// EnemyTank the specials
+class EnemyTank extends Tank {
+  float chaseDistance = 300;
+  int shootDelay = 60; 
+  int lastShotTime = 0;
+
+  EnemyTank(float startX, float startY, color c) {
+    super(startX, startY, c); 
+  }
+  
+  void update(Tank player) {
+  
+    float d = dist(x, y, player.x, player.y);
+    turretAngle = atan2(player.y - y, player.x - x); 
+
+    if (d < chaseDistance) {
+     
+      angle = turretAngle; 
+      movingForward = true;
+      
+ 
+      if (millis() > lastShotTime + shootDelay * (1000/frameRate)) {
+         shoot();
+         lastShotTime = millis();
+      }
+    } else {
+      movingForward = false;
+    }
+
+
+    super.update();
+  }
+  
+ 
+  void shoot() {
+    // Add a new bullet to the global list 'bullets' (defined in Main)
+    bullets.add(new Bullet(x, y, turretAngle));
+  }
+}
