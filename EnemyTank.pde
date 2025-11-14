@@ -33,7 +33,7 @@ class EnemyTank extends Tank {
   
  
   void shoot() {
-    // Add a new bullet to the global list 'bullets' (defined in Main)
+    
     bullets.add(new Bullet(x, y, turretAngle));
   }
 }
