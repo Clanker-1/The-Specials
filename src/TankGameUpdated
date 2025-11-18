@@ -1,0 +1,244 @@
+Tank playerTank;
+ArrayList<Bullet> bullets = new ArrayList<Bullet>();
+ArrayList<EnemyTank> enemies = new ArrayList<EnemyTank>();
+ArrayList<Wall> walls = new ArrayList<Wall>();
+
+
+final int STATE_START = 0;
+final int STATE_PLAYING = 1;
+final int STATE_PAUSED = 2;
+final int STATE_ENDED = 3;
+int gameState = STATE_START; // Start the game in the initial state
+
+void setup() {
+  size(800, 600);
+  rectMode(CENTER);
+  imageMode(CENTER);
+  
+}
+
+// Function to reset and start a new game
+void startGame() {
+ 
+  walls.clear();
+  enemies.clear();
+  bullets.clear();
+
+  // Create game objects
+  playerTank = new Tank(50, 50, color(50, 150, 50));
+  enemies.add(new EnemyTank(750, 550, color(150, 50, 50)));
+  // Add more enemies here if needed
+
+  // Define maze walls (x, y, width, height)
+  walls.add(new Wall(width/2, 0, width, 10));      // Top
+  walls.add(new Wall(width/2, height, width, 10)); // Bottom
+  walls.add(new Wall(0, height/2, 10, height));   // Left
+  walls.add(new Wall(width, height/2, 10, height));// Right
+  walls.add(new Wall(width/2, height/2, 200, 10)); // Center H
+  walls.add(new Wall(width/4, height/2, 10, 100)); // Left V
+  walls.add(new Wall(3*width/4, height/4, 10, 150)); // Right V
+  
+  gameState = STATE_PLAYING;
+}
+
+void draw() {
+  background(200);
+
+  // Use a switch statement to handle different game states
+  switch (gameState) {
+    case STATE_START:
+      drawStartScreen();
+      break;
+      
+    case STATE_PLAYING:
+      updateGameLogic();
+      break;
+      
+    case STATE_PAUSED:
+      updateGameLogic(); // Draw game state first
+      drawPauseScreen(); // Overlay pause screen
+      break;
+      
+    case STATE_ENDED:
+      drawEndScreen();
+      break;
+  }
+}
+
+// Separate function to manage all the active game updates and drawing
+void updateGameLogic() {
+  // Check if the player is destroyed, transition to Game Over
+  if (!playerTank.isAlive) {
+      gameState = STATE_ENDED;
+      return; // Stop processing the rest of the game loop this frame
+  }
+
+  // Update and display walls
+  for (Wall w : walls) {
+    w.display();
+  }
+
+  // Update and display player tank
+  playerTank.update();
+  playerTank.checkCollision(walls);
+  playerTank.display();
+
+  // Update and display enemies
+  for (EnemyTank e : enemies) {
+    e.update(playerTank);
+    e.checkCollision(walls);
+    e.display();
+  }
+
+  // Update and display bullets, check collisions
+  for (int i = bullets.size() - 1; i >= 0; i--) {
+    Bullet b = bullets.get(i);
+    b.update();
+    b.display();
+
+    // Check bullet collision with walls
+    boolean hitWall = false;
+    for(Wall w : walls) {
+        if (b.checkWallCollision(w)) {
+            hitWall = true;
+            break;
+        }
+    }
+
+    // Check bullet collision with tanks
+    boolean hitTank = false;
+    if (!hitWall) {
+      if (b.checkTankCollision(playerTank)) {
+          hitTank = true;
+      } else {
+          for (EnemyTank e : enemies) {
+              if (b.checkTankCollision(e)) {
+                  hitTank = true;
+                  // Handle enemy removal if needed (must check 'e.isAlive' after this call)
+                  break; 
+              }
+          }
+      }
+    }
+    
+    // Remove bullets that go off-screen or hit something
+    if (b.isOffScreen() || hitWall || hitTank) {
+      bullets.remove(i);
+    }
+  }
+  
+  // Clean up destroyed enemies from the list (optional but good practice)
+  for (int i = enemies.size() - 1; i >= 0; i--) {
+      if (!enemies.get(i).isAlive) {
+          enemies.remove(i);
+      }
+  }
+}
+
+
+// --- Functions to draw the specific screens ---
+
+void drawStartScreen() {
+  background(50); // Dark background for start screen
+  textAlign(CENTER, CENTER);
+  textSize(48);
+  fill(255);
+  text("TANK GAME", width/2, height/3);
+  textSize(24);
+  text("Press [ENTER] to Start", width/2, height/2);
+  text("Use W/A/S/D to move, Mouse to shoot", width/2, height/2 + 40);
+  text("Press [P] to Pause during game", width/2, height/2 + 80);
+}
+
+void drawPauseScreen() {
+  fill(0, 150); // Semi-transparent overlay
+  rect(width/2, height/2, width, height);
+  textAlign(CENTER, CENTER);
+  textSize(48);
+  fill(255, 0, 0);
+  text("PAUSED", width/2, height/2);
+  textSize(18);
+  fill(255);
+  text("Press [P] to resume", width/2, height/2 + 40);
+}
+
+void drawEndScreen() {
+  background(0); // Black background for game over
+  textAlign(CENTER, CENTER);
+  textSize(48);
+  fill(255, 0, 0);
+  text("GAME OVER", width/2, height/3);
+  textSize(24);
+  fill(255);
+  text("Press [R] to Restart", width/2, height/2);
+}
+
+
+// --- Modified Input Handlers ---
+
+void keyPressed() {
+  // Movement input is only processed when PLAYING
+  if (gameState == STATE_PLAYING) {
+    if (key == 'w') playerTank.movingForward = true;
+    if (key == 's') playerTank.movingBackward = true;
+    if (key == 'a') playerTank.turningLeft = true;
+    if (key == 'd') playerTank.turningRight = true;
+  }
+  
+  // Handle State Changes
+  if (key == ENTER || key == RETURN) {
+    if (gameState == STATE_START) {
+      startGame(); // Start the game
+    }
+  }
+  
+  if (key == 'p' || key == 'P') {
+    if (gameState == STATE_PLAYING) {
+      gameState = STATE_PAUSED;
+    } else if (gameState == STATE_PAUSED) {
+      gameState = STATE_PLAYING; // Resume game
+    }
+  }
+  
+  if (key == 'r' || key == 'R') {
+    if (gameState == STATE_ENDED) {
+      startGame(); // Restart game from end screen
+    }
+  }
+}
+
+void keyReleased() {
+  if (gameState == STATE_PLAYING) {
+    if (key == 'w') playerTank.movingForward = false;
+    if (key == 's') playerTank.movingBackward = false;
+    if (key == 'a') playerTank.turningLeft = false;
+    if (key == 'd') playerTank.turningRight = false;
+  }
+}
+
+void mousePressed() {
+  // Shooting is only processed when PLAYING
+  if (gameState == STATE_PLAYING) {
+    if (mouseButton == LEFT) {
+      playerTank.shoot();
+    }
+  }
+}
+
+
+class Wall {
+  float x, y, w, h;
+
+  Wall(float x, float y, float w, float h) {
+    this.x = x;
+    this.y = y;
+    this.w = w;
+    this.h = h;
+  }
+
+  void display() {
+    fill(50, 50, 50);
+    noStroke();
+    rect(x, y, w, h);
+  }
+}
