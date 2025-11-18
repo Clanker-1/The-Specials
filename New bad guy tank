@@ -1,0 +1,19 @@
+    turretAngle = atan2(player.y - y, player.x - x); 
+
+    if (d < chaseDistance) {
+      angle = turretAngle; 
+      movingForward = true;
+      
+      if (millis() > lastShotTime + shootDelay * (1000/frameRate)) {
+         shoot();
+         lastShotTime = millis();
+      }
+    } else {
+      movingForward = false;
+    }
+
+    super.update(); // Call the parent Tank's update for movement application
+  }
+  
+  // Shoot function is inherited from the parent Tank class and works fine.
+}
