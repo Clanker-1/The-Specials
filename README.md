@@ -8,7 +8,7 @@
 ![Class Diagram](https://github.com/Clanker-1/The-Specials/blob/main/Images/TankGame.png)
 
 **UI**
-![UI](Not done)
+![UI](https://github.com/Clanker-1/The-Specials/blob/main/Images/screen.jpg)
 
 ## Core Classes
 | Class | Role |
