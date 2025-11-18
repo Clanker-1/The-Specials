@@ -7,6 +7,12 @@
 ! (Not done)
 ! (Not done)
 
+## Core Classes
+| Class | Role |
+|-------|------|
+| `Main` | `setup()`, `draw()` |
+| `...` | ... |
+
 ## Group
 - Quinn (@Clanker-1)
 - Franklin (@clanker-d15)
