@@ -1,4 +1,3 @@
-// Tank the specials
 class Tank {
   float x, y, angle, turretAngle;
   float speed = 2.5; 
@@ -10,6 +9,7 @@ class Tank {
 
   float maxHealth = 100;
   float currentHealth;
+  boolean isAlive = true; // NEW: Track if the tank is active
 
   boolean movingForward = false;
   boolean movingBackward = false;
@@ -25,9 +25,12 @@ class Tank {
     angle = 0;
     tankColor = c;
     currentHealth = maxHealth;
+    isAlive = true; // Ensure it starts alive
   }
   
   void update() {
+    if (!isAlive) return; // Stop updates if destroyed
+
     // Movement and aiming logic remains the same as before
     if (movingForward) {
       x += cos(angle) * speed;
@@ -39,13 +42,21 @@ class Tank {
     }
     if (turningLeft) angle -= rotationSpeed;
     if (turningRight) angle += rotationSpeed;
-    turretAngle = atan2(mouseY - y, mouseX - x);
+    
+    // Only update turret angle if it's the player tank (mouseX/mouseY only work for player input)
+    // This part might need refinement if you want enemy tanks to use mouseX/mouseY logic
+    // For the player tank, this is correct:
+    if (this == playerTank) { 
+        turretAngle = atan2(mouseY - y, mouseX - x);
+    }
 
     x = constrain(x, size/2, width - size/2);
     y = constrain(y, size/2, height - size/2);
   }
 
   void checkCollision(ArrayList<Wall> walls) {
+    if (!isAlive) return; // Stop collision checks if destroyed
+
     for (Wall w : walls) {
       if (x + hitBoxW/2 > w.x - w.w/2 && x - hitBoxW/2 < w.x + w.w/2 &&
           y + hitBoxH/2 > w.y - w.h/2 && y - hitBoxH/2 < w.y + w.h/2) {
@@ -60,6 +71,8 @@ class Tank {
   }
 
   void display() {
+    if (!isAlive) return; // Don't draw if destroyed
+
     pushMatrix();
     translate(x, y);
     rotate(angle);
@@ -80,6 +93,7 @@ class Tank {
   }
 
   void displayHealth() {
+    if (!isAlive) return;
     float barWidth = 40;
     float barHeight = 5;
     float healthPercentage = currentHealth / maxHealth;
@@ -97,12 +111,13 @@ class Tank {
     currentHealth -= damage;
     if (currentHealth <= 0) {
       currentHealth = 0;
-      // Handle tank destruction here (e.g., game over, remove enemy)
+      isAlive = false; // Mark as destroyed
       println("Tank destroyed!");
     }
   }
 
   void shoot() {
+    if (!isAlive) return; // Cannot shoot if destroyed
     if (millis() > lastShotTime + shootDelay * (1000/frameRate)) {
       bullets.add(new Bullet(x, y, turretAngle));
       lastShotTime = millis();
