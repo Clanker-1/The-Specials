@@ -7,14 +7,11 @@
 **Class Diagram**
 ![Class Diagram](https://github.com/Clanker-1/The-Specials/blob/main/Images/TankGame.png)
 
+
 **UI**
+
 ![UI](https://github.com/Clanker-1/The-Specials/blob/main/Images/screen.jpg)
 
-## Core Classes
-| Class | Role |
-|-------|------|
-| `Tank Game` | `setup()`, `draw()`, `startGame()`, `keyPressed()`, `keyReleased()`, `mousePressed()`, `display()` |
-| `...` | ... |
 
 ## Group
 - Quinn (@Clanker-1)
