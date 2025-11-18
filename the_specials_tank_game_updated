@@ -3,7 +3,7 @@ ArrayList<Bullet> bullets = new ArrayList<Bullet>();
 ArrayList<EnemyTank> enemies = new ArrayList<EnemyTank>();
 ArrayList<Wall> walls = new ArrayList<Wall>();
 
-// --- State Management Variables ---
+
 final int STATE_START = 0;
 final int STATE_PLAYING = 1;
 final int STATE_PAUSED = 2;
@@ -14,12 +14,12 @@ void setup() {
   size(800, 600);
   rectMode(CENTER);
   imageMode(CENTER);
-  // Game objects are now created in startGame()
+  
 }
 
 // Function to reset and start a new game
 void startGame() {
-  // Clear existing objects
+ 
   walls.clear();
   enemies.clear();
   bullets.clear();
