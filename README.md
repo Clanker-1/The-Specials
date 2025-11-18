@@ -13,7 +13,7 @@
 ## Core Classes
 | Class | Role |
 |-------|------|
-| `Main` | `setup()`, `draw()` |
+| `Tank Game` | `setup()`, `draw()`, `startGame()`, `keyPressed()`, `keyReleased()`, `mousePressed()`, `display()` |
 | `...` | ... |
 
 ## Group
