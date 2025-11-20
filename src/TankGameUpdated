@@ -150,6 +150,7 @@ void drawStartScreen() {
   text("Press [P] to Pause during game", width/2, height/2 + 80);
 }
 
+//Franklin Roth
 void drawPauseScreen() {
   fill(0, 150); // Semi-transparent overlay
   rect(width/2, height/2, width, height);
@@ -162,6 +163,7 @@ void drawPauseScreen() {
   text("Press [P] to resume", width/2, height/2 + 40);
 }
 
+//Quinn Dawson
 void drawEndScreen() {
   background(0); // Black background for game over
   textAlign(CENTER, CENTER);
