@@ -136,8 +136,8 @@ void updateGameLogic() {
 }
 
 
-// --- Functions to draw the specific screens ---
-
+//Functions to draw the specific screens
+//Henry_Hart
 void drawStartScreen() {
   background(50); // Dark background for start screen
   textAlign(CENTER, CENTER);
@@ -174,7 +174,7 @@ void drawEndScreen() {
 }
 
 
-// --- Modified Input Handlers ---
+//Modified Input Handlers
 
 void keyPressed() {
   // Movement input is only processed when PLAYING
