@@ -14,12 +14,11 @@ void setup() {
   size(800, 600);
   rectMode(CENTER);
   imageMode(CENTER);
-  
 }
 
 // Function to reset and start a new game
 void startGame() {
- 
+
   walls.clear();
   enemies.clear();
   bullets.clear();
@@ -37,7 +36,7 @@ void startGame() {
   walls.add(new Wall(width/2, height/2, 200, 10)); // Center H
   walls.add(new Wall(width/4, height/2, 10, 100)); // Left V
   walls.add(new Wall(3*width/4, height/4, 10, 150)); // Right V
-  
+
   gameState = STATE_PLAYING;
 }
 
@@ -46,22 +45,22 @@ void draw() {
 
   // Use a switch statement to handle different game states
   switch (gameState) {
-    case STATE_START:
-      drawStartScreen();
-      break;
-      
-    case STATE_PLAYING:
-      updateGameLogic();
-      break;
-      
-    case STATE_PAUSED:
-      updateGameLogic(); // Draw game state first
-      drawPauseScreen(); // Overlay pause screen
-      break;
-      
-    case STATE_ENDED:
-      drawEndScreen();
-      break;
+  case STATE_START:
+    drawStartScreen();
+    break;
+
+  case STATE_PLAYING:
+    updateGameLogic();
+    break;
+
+  case STATE_PAUSED:
+    updateGameLogic(); // Draw game state first
+    drawPauseScreen(); // Overlay pause screen
+    break;
+
+  case STATE_ENDED:
+    drawEndScreen();
+    break;
   }
 }
 
@@ -69,8 +68,8 @@ void draw() {
 void updateGameLogic() {
   // Check if the player is destroyed, transition to Game Over
   if (!playerTank.isAlive) {
-      gameState = STATE_ENDED;
-      return; // Stop processing the rest of the game loop this frame
+    gameState = STATE_ENDED;
+    return; // Stop processing the rest of the game loop this frame
   }
 
   // Update and display walls
@@ -95,49 +94,50 @@ void updateGameLogic() {
     Bullet b = bullets.get(i);
     b.update();
     b.display();
+    b.move();
 
     // Check bullet collision with walls
     boolean hitWall = false;
-    for(Wall w : walls) {
-        if (b.checkWallCollision(w)) {
-            hitWall = true;
-            break;
-        }
+    for (Wall w : walls) {
+      if (b.checkWallCollision(w)) {
+        hitWall = true;
+        break;
+      }
     }
 
     // Check bullet collision with tanks
     boolean hitTank = false;
     if (!hitWall) {
       if (b.checkTankCollision(playerTank)) {
-          hitTank = true;
+        hitTank = true;
       } else {
-          for (EnemyTank e : enemies) {
-              if (b.checkTankCollision(e)) {
-                  hitTank = true;
-                  // Handle enemy removal if needed (must check 'e.isAlive' after this call)
-                  break; 
-              }
+        for (EnemyTank e : enemies) {
+          if (b.checkTankCollision(e)) {
+            hitTank = true;
+            // Handle enemy removal if needed (must check 'e.isAlive' after this call)
+            break;
           }
+        }
       }
     }
-    
+
     // Remove bullets that go off-screen or hit something
     if (b.isOffScreen() || hitWall || hitTank) {
       bullets.remove(i);
     }
   }
-  
+
   // Clean up destroyed enemies from the list (optional but good practice)
   for (int i = enemies.size() - 1; i >= 0; i--) {
-      if (!enemies.get(i).isAlive) {
-          enemies.remove(i);
-      }
+    if (!enemies.get(i).isAlive) {
+      enemies.remove(i);
+    }
   }
 }
 
 
-//Functions to draw the specific screens
-//Henry_Hart
+// --- Functions to draw the specific screens ---
+
 void drawStartScreen() {
   background(50); // Dark background for start screen
   textAlign(CENTER, CENTER);
@@ -150,7 +150,6 @@ void drawStartScreen() {
   text("Press [P] to Pause during game", width/2, height/2 + 80);
 }
 
-//Franklin Roth
 void drawPauseScreen() {
   fill(0, 150); // Semi-transparent overlay
   rect(width/2, height/2, width, height);
@@ -163,7 +162,6 @@ void drawPauseScreen() {
   text("Press [P] to resume", width/2, height/2 + 40);
 }
 
-//Quinn Dawson
 void drawEndScreen() {
   background(0); // Black background for game over
   textAlign(CENTER, CENTER);
@@ -176,7 +174,7 @@ void drawEndScreen() {
 }
 
 
-//Modified Input Handlers
+// --- Modified Input Handlers ---
 
 void keyPressed() {
   // Movement input is only processed when PLAYING
@@ -186,14 +184,14 @@ void keyPressed() {
     if (key == 'a') playerTank.turningLeft = true;
     if (key == 'd') playerTank.turningRight = true;
   }
-  
+
   // Handle State Changes
   if (key == ENTER || key == RETURN) {
     if (gameState == STATE_START) {
       startGame(); // Start the game
     }
   }
-  
+
   if (key == 'p' || key == 'P') {
     if (gameState == STATE_PLAYING) {
       gameState = STATE_PAUSED;
@@ -201,7 +199,7 @@ void keyPressed() {
       gameState = STATE_PLAYING; // Resume game
     }
   }
-  
+
   if (key == 'r' || key == 'R') {
     if (gameState == STATE_ENDED) {
       startGame(); // Restart game from end screen
