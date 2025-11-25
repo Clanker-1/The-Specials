@@ -17,4 +17,4 @@
 - Quinn (@Clanker-1)
 - Franklin (@clanker-d15)
 - Henry (@Henryvoidstar)
-- Oscar (@)
+- Oskar (@)
