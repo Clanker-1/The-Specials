@@ -63,8 +63,8 @@ class Tank {
         
         if (movingForward || movingBackward) {
            float angleOfImpact = atan2(y - w.y, x - w.x);
-           x += cos(angleOfImpact) * speed * 2;
-           y += sin(angleOfImpact) * speed * 2;
+           x += cos(angleOfImpact) * speed * 4;
+           y += sin(angleOfImpact) * speed * 3;
         }
       }
     }
