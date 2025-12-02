@@ -18,7 +18,6 @@ void setup() {
 
 // Function to reset and start a new game
 void startGame() {
-
   walls.clear();
   enemies.clear();
   bullets.clear();
@@ -26,16 +25,53 @@ void startGame() {
   // Create game objects
   playerTank = new Tank(50, 50, color(50, 150, 50));
   enemies.add(new EnemyTank(750, 550, color(150, 50, 50)));
-  // Add more enemies here if needed
 
-  // Define maze walls (x, y, width, height)
+  // Boundary walls (keep tanks inside)
   walls.add(new Wall(width/2, 0, width, 10));      // Top
   walls.add(new Wall(width/2, height, width, 10)); // Bottom
-  walls.add(new Wall(0, height/2, 10, height));   // Left
+  walls.add(new Wall(0, height/2, 10, height));    // Left
   walls.add(new Wall(width, height/2, 10, height));// Right
-  walls.add(new Wall(width/2, height/2, 200, 10)); // Center H
-  walls.add(new Wall(width/4, height/2, 10, 100)); // Left V
-  walls.add(new Wall(3*width/4, height/4, 10, 150)); // Right V
+
+  // Random interior walls
+  int NUM_RANDOM_WALLS = 60; // adjust number
+  int attempts = 0;
+  while (walls.size() < 4 + NUM_RANDOM_WALLS && attempts < 1000) {
+    attempts++;
+
+    // Random orientation
+    boolean horizontal = random(1) < 0.5;
+
+    float x = random(60, width - 40);
+    float y = random(60, height - 40);
+
+    float w, h;
+    if (horizontal) {
+      w = random(80, 200); // horizontal length
+      h = 10;              // fixed thickness
+    } else {
+      w = 10;              // fixed thickness
+      h = random(80, 200); // vertical length
+    }
+
+    Wall candidate = new Wall(x, y, w, h);
+
+    // Ensure at least 100px away from player spawn
+    if (dist(x, y, playerTank.x, playerTank.y) < 100) continue;
+
+    // Check overlap with existing walls (20px gap buffer)
+    boolean overlaps = false;
+    for (Wall w0 : walls) {
+      if (abs(candidate.x - w0.x) < (candidate.w/2 + w0.w/2 + 50) &&
+        abs(candidate.y - w0.y) < (candidate.h/2 + w0.h/2 + 50)) {
+        overlaps = true;
+        break;
+      }
+    }
+
+    if (!overlaps) {
+      walls.add(candidate);
+    }
+  }
 
   gameState = STATE_PLAYING;
 }
@@ -144,10 +180,13 @@ void drawStartScreen() {
   textSize(48);
   fill(255);
   text("TANK GAME", width/2, height/3);
+  text("CONTROLS", width/2, height/3 + 165);
   textSize(24);
-  text("Press [ENTER] to Start", width/2, height/2);
-  text("Use W/A/S/D to move, Mouse to shoot", width/2, height/2 + 40);
-  text("Press [P] to Pause during game", width/2, height/2 + 80);
+  text("--Press [ENTER] to Start--", width/2, height/2 - 25);
+  text("--Use W/S or Arrow key Up/Down to move--", width/2, height/2 + 105);
+  text("--Use A/D or Arrow key Left/Right to turn--", width/2, height/2 + 135);
+  text("--Press [P] to Pause during game--", width/2, height/2 + 165);
+  text("--LeftMouse to shoot--", width/2, height/2 + 195);
 }
 
 void drawPauseScreen() {
@@ -159,7 +198,7 @@ void drawPauseScreen() {
   text("PAUSED", width/2, height/2);
   textSize(18);
   fill(255);
-  text("Press [P] to resume", width/2, height/2 + 40);
+  text("--Press [P] to resume--", width/2, height/2 + 40);
 }
 
 void drawEndScreen() {
@@ -170,7 +209,7 @@ void drawEndScreen() {
   text("GAME OVER", width/2, height/3);
   textSize(24);
   fill(255);
-  text("Press [R] to Restart", width/2, height/2);
+  text("--Press [R] to Restart--", width/2, height/2);
 }
 
 
@@ -183,6 +222,10 @@ void keyPressed() {
     if (key == 's') playerTank.movingBackward = true;
     if (key == 'a') playerTank.turningLeft = true;
     if (key == 'd') playerTank.turningRight = true;
+    if (keyCode == 38) playerTank.movingForward = true;
+    if (keyCode == 40) playerTank.movingBackward = true;
+    if (keyCode == 37) playerTank.turningLeft = true;
+    if (keyCode == 39) playerTank.turningRight = true;
   }
 
   // Handle State Changes
@@ -213,6 +256,10 @@ void keyReleased() {
     if (key == 's') playerTank.movingBackward = false;
     if (key == 'a') playerTank.turningLeft = false;
     if (key == 'd') playerTank.turningRight = false;
+    if (keyCode == 38) playerTank.movingForward = false;
+    if (keyCode == 40) playerTank.movingBackward = false;
+    if (keyCode == 37) playerTank.turningLeft = false;
+    if (keyCode == 39) playerTank.turningRight = false;
   }
 }
 
