@@ -7,7 +7,7 @@ class Bullet {
     x = startX;
     y = startY;
     angle = startAngle;
-    speed = 8;
+    speed = 9;
   }
   // ... update(), display(), isOffScreen(), checkWallCollision() functions are the same ...
   void update() {
@@ -26,6 +26,7 @@ class Bullet {
     x += cos(angle) * speed;
     y += sin(angle) * speed;
   }
+
   boolean isOffScreen() {
     return (x < 0 || x > width || y < 0 || y > height);
   }
