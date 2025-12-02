@@ -35,5 +35,20 @@ class EnemyTank extends Tank {
   void shoot() {
 
     bullets.add(new Bullet(x, y, turretAngle));
+    lastShotTime = millis();
+
+      // Recoil
+      recoilOffset = recoilMax;
+
+      // Muzzle flash 
+      pushMatrix();
+      translate(x, y);
+      rotate(turretAngle);
+      noStroke();
+      fill(#F5C505);
+      ellipse(size * 0.9, 0, 25, 25);
+      fill(#F59905);
+      ellipse(size * 0.9, 0, 15, 15);
+      popMatrix();
   }
 }
