@@ -19,7 +19,6 @@ class Tank {
   int lastShotTime = 0;
   int shootDelay = 30;
 
-  // Recoil variables
   float recoilOffset = 0;       // how far back the muzzle is pushed
   float recoilMax = 10;         // maximum recoil distance
   float recoilRecoverySpeed = 1; // speed at which it returns
