@@ -33,7 +33,7 @@ void startGame() {
   walls.add(new Wall(width, height/2, 10, height));// Right
 
   // Random interior walls
-  int NUM_RANDOM_WALLS = 60; // adjust number
+  int NUM_RANDOM_WALLS = 50; // adjust number
   int attempts = 0;
   while (walls.size() < 4 + NUM_RANDOM_WALLS && attempts < 1000) {
     attempts++;
@@ -46,11 +46,11 @@ void startGame() {
 
     float w, h;
     if (horizontal) {
-      w = random(80, 200); // horizontal length
-      h = 10;              // fixed thickness
+      w = random(70, 200); // horizontal length
+      h = random(10, 15);              // fixed thickness
     } else {
-      w = 10;              // fixed thickness
-      h = random(80, 200); // vertical length
+      w = random(10, 15);              // fixed thickness
+      h = random(70, 200); // vertical length
     }
 
     Wall candidate = new Wall(x, y, w, h);
@@ -182,7 +182,7 @@ void drawStartScreen() {
   text("TANK GAME", width/2, height/3);
   text("CONTROLS", width/2, height/3 + 165);
   textSize(24);
-  text("--Press [ENTER] to Start--", width/2, height/2 - 25);
+  text("--Press [ENTER] to Start--", width/2, height/2 - 45);
   text("--Use W/S or Arrow key Up/Down to move--", width/2, height/2 + 105);
   text("--Use A/D or Arrow key Left/Right to turn--", width/2, height/2 + 135);
   text("--Press [P] to Pause during game--", width/2, height/2 + 165);
