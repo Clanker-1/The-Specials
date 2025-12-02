@@ -1,6 +1,6 @@
 class Tank {
   float x, y, angle, turretAngle;
-  float speed = 2.5; 
+  float speed = 2.5;
   float rotationSpeed = 0.05;
   int size = 30;
   color tankColor;
@@ -15,7 +15,7 @@ class Tank {
   boolean movingBackward = false;
   boolean turningLeft = false;
   boolean turningRight = false;
-  
+
   int lastShotTime = 0;
   int shootDelay = 30;
 
@@ -27,7 +27,7 @@ class Tank {
     currentHealth = maxHealth;
     isAlive = true; // Ensure it starts alive
   }
-  
+
   void update() {
     if (!isAlive) return; // Stop updates if destroyed
 
@@ -42,12 +42,12 @@ class Tank {
     }
     if (turningLeft) angle -= rotationSpeed;
     if (turningRight) angle += rotationSpeed;
-    
+
     // Only update turret angle if it's the player tank (mouseX/mouseY only work for player input)
     // This part might need refinement if you want enemy tanks to use mouseX/mouseY logic
     // For the player tank, this is correct:
-    if (this == playerTank) { 
-        turretAngle = atan2(mouseY - y, mouseX - x);
+    if (this == playerTank) {
+      turretAngle = atan2(mouseY - y, mouseX - x);
     }
 
     x = constrain(x, size/2, width - size/2);
@@ -55,16 +55,30 @@ class Tank {
   }
 
   void checkCollision(ArrayList<Wall> walls) {
-    if (!isAlive) return; // Stop collision checks if destroyed
+    if (!isAlive) return;
 
     for (Wall w : walls) {
+      // Axis-aligned bounding box (AABB) collision check
       if (x + hitBoxW/2 > w.x - w.w/2 && x - hitBoxW/2 < w.x + w.w/2 &&
-          y + hitBoxH/2 > w.y - w.h/2 && y - hitBoxH/2 < w.y + w.h/2) {
-        
-        if (movingForward || movingBackward) {
-           float angleOfImpact = atan2(y - w.y, x - w.x);
-           x += cos(angleOfImpact) * speed * 4;
-           y += sin(angleOfImpact) * speed * 3;
+        y + hitBoxH/2 > w.y - w.h/2 && y - hitBoxH/2 < w.y + w.h/2) {
+
+        // Compute overlap distances in both axes
+        float overlapX = (hitBoxW/2 + w.w/2) - abs(x - w.x);
+        float overlapY = (hitBoxH/2 + w.h/2) - abs(y - w.y);
+
+        // Resolve collision along the axis of least penetration
+        if (overlapX < overlapY) {
+          if (x < w.x) {
+            x -= overlapX; // push left
+          } else {
+            x += overlapX; // push right
+          }
+        } else {
+          if (y < w.y) {
+            y -= overlapY; // push up
+          } else {
+            y += overlapY; // push down
+          }
         }
       }
     }
@@ -77,18 +91,19 @@ class Tank {
     translate(x, y);
     rotate(angle);
 
+    stroke(4);
     fill(tankColor);
     rect(0, 0, size, size * 0.7);
 
     pushMatrix();
-    rotate(turretAngle - angle); 
+    rotate(turretAngle - angle);
     fill(100, 100, 100);
-    rect(0, 0, size * 0.6, size * 0.4);
     rect(size * 0.35, 0, size * 0.7, size * 0.1);
+    rect(0, 0, size * 0.6, size * 0.4);
     popMatrix();
 
     popMatrix();
-    
+
     displayHealth(); // Call the health bar display function
   }
 
@@ -106,7 +121,7 @@ class Tank {
     fill(0, 255, 0);
     rect(x - (barWidth/2) * (1 - healthPercentage), y - size - 10, barWidth * healthPercentage, barHeight);
   }
-  
+
   void takeDamage(float damage) {
     currentHealth -= damage;
     if (currentHealth <= 0) {
