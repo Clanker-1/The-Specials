@@ -9,7 +9,7 @@ class Tank {
 
   float maxHealth = 100;
   float currentHealth;
-  boolean isAlive = true; // NEW: Track if the tank is active
+  boolean isAlive = true; // Track if the tank is active
 
   boolean movingForward = false;
   boolean movingBackward = false;
@@ -19,19 +19,23 @@ class Tank {
   int lastShotTime = 0;
   int shootDelay = 30;
 
+  // Recoil variables
+  float recoilOffset = 0;       // how far back the muzzle is pushed
+  float recoilMax = 10;         // maximum recoil distance
+  float recoilRecoverySpeed = 1; // speed at which it returns
+
   Tank(float startX, float startY, color c) {
     x = startX;
     y = startY;
     angle = 0;
     tankColor = c;
     currentHealth = maxHealth;
-    isAlive = true; // Ensure it starts alive
+    isAlive = true;
   }
 
   void update() {
-    if (!isAlive) return; // Stop updates if destroyed
+    if (!isAlive) return;
 
-    // Movement and aiming logic remains the same as before
     if (movingForward) {
       x += cos(angle) * speed;
       y += sin(angle) * speed;
@@ -43,11 +47,14 @@ class Tank {
     if (turningLeft) angle -= rotationSpeed;
     if (turningRight) angle += rotationSpeed;
 
-    // Only update turret angle if it's the player tank (mouseX/mouseY only work for player input)
-    // This part might need refinement if you want enemy tanks to use mouseX/mouseY logic
-    // For the player tank, this is correct:
     if (this == playerTank) {
       turretAngle = atan2(mouseY - y, mouseX - x);
+    }
+
+    // Recoil recovery
+    if (recoilOffset > 0) {
+      recoilOffset -= recoilRecoverySpeed;
+      if (recoilOffset < 0) recoilOffset = 0;
     }
 
     x = constrain(x, size/2, width - size/2);
@@ -85,7 +92,7 @@ class Tank {
   }
 
   void display() {
-    if (!isAlive) return; // Don't draw if destroyed
+    if (!isAlive) return;
 
     pushMatrix();
     translate(x, y);
@@ -97,14 +104,21 @@ class Tank {
 
     pushMatrix();
     rotate(turretAngle - angle);
+
+    // Apply recoil offset to turret
+    translate(-recoilOffset, 0);
+
     fill(100, 100, 100);
     rect(size * 0.35, 0, size * 0.7, size * 0.1);
     rect(0, 0, size * 0.6, size * 0.4);
+    noStroke();
+    rect(size * 0.34, 0, size * 0.69, size * 0.09);
+    stroke(4);
     popMatrix();
 
     popMatrix();
 
-    displayHealth(); // Call the health bar display function
+    displayHealth();
   }
 
   void displayHealth() {
@@ -113,11 +127,9 @@ class Tank {
     float barHeight = 5;
     float healthPercentage = currentHealth / maxHealth;
 
-    // Background of health bar (red)
     fill(255, 0, 0);
     rect(x, y - size - 10, barWidth, barHeight);
 
-    // Foreground of health bar (green)
     fill(0, 255, 0);
     rect(x - (barWidth/2) * (1 - healthPercentage), y - size - 10, barWidth * healthPercentage, barHeight);
   }
@@ -126,16 +138,30 @@ class Tank {
     currentHealth -= damage;
     if (currentHealth <= 0) {
       currentHealth = 0;
-      isAlive = false; // Mark as destroyed
+      isAlive = false;
       println("Tank destroyed!");
     }
   }
 
   void shoot() {
-    if (!isAlive) return; // Cannot shoot if destroyed
+    if (!isAlive) return;
     if (millis() > lastShotTime + shootDelay * (1000/frameRate)) {
       bullets.add(new Bullet(x, y, turretAngle));
       lastShotTime = millis();
+
+      // Recoil
+      recoilOffset = recoilMax;
+
+      // Muzzle flash 
+      pushMatrix();
+      translate(x, y);
+      rotate(turretAngle);
+      noStroke();
+      fill(#F5C505);
+      ellipse(size * 0.9, 0, 25, 25);
+      fill(#F59905);
+      ellipse(size * 0.9, 0, 15, 15);
+      popMatrix();
     }
   }
 }
