@@ -10,7 +10,7 @@
 
 **UI**
 
-![UI](https://github.com/Clanker-1/The-Specials/blob/main/Images/screen.jpg)
+![UI](https://github.com/Clanker-1/The-Specials/blob/main/Images/Updated%20UI.png)
 
 
 **Running Project (So far)**
