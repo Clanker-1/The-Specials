@@ -13,6 +13,10 @@
 ![UI](https://github.com/Clanker-1/The-Specials/blob/main/Images/screen.jpg)
 
 
+**Running Project (So far)**
+
+![Running Project](https://github.com/Clanker-1/The-Specials/blob/main/Images/Showcase1.jpg)
+
 ## Group
 - Quinn (@Clanker-1)
 - Franklin (@clanker-d15)
