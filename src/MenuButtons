@@ -1,0 +1,33 @@
+class MenuButtons {
+  int x, y, w, h;
+  color c;
+  String text;
+
+  MenuButtons(int x, int y, int w, int h, color c, String text) {
+    this.x = x;
+    this.y = y;
+    this.w = w;
+    this.h = h;
+    this.c = c;
+    this.text = text;
+  }
+
+  void display() {
+    rectMode(CENTER);
+
+    fill(c);
+    strokeWeight(2);
+    stroke(0);
+    rect(x, y, w, h, 10);
+
+    textAlign(CENTER, CENTER);
+    textSize(30);
+    fill(0);
+    text(text, x, y-5);
+  }
+
+  boolean isClicked(float mx, float my) {
+    return mx > x - w/2 && mx < x + w/2 &&
+      my > y - h/2 && my < y + h/2;
+  }
+}
