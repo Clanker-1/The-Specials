@@ -1,19 +1,27 @@
+// Everybody contributed
+
 Tank playerTank;
 ArrayList<Bullet> bullets = new ArrayList<Bullet>();
 ArrayList<EnemyTank> enemies = new ArrayList<EnemyTank>();
 ArrayList<Wall> walls = new ArrayList<Wall>();
 
+MenuButtons[] Control = new MenuButtons[1];
+MenuButtons[] HowToPlay = new MenuButtons[1];
 
 final int STATE_START = 0;
 final int STATE_PLAYING = 1;
 final int STATE_PAUSED = 2;
 final int STATE_ENDED = 3;
+final int STATE_CONTROLS = 4;
+final int STATE_HOWTOPLAY = 5;
 int gameState = STATE_START; // Start the game in the initial state
 
 void setup() {
   size(800, 600);
   rectMode(CENTER);
   imageMode(CENTER);
+  Control[0] = new MenuButtons(250, 300, 125, 40, #FFFFFF, "Controls");
+  HowToPlay[0] = new MenuButtons(550, 300, 165, 40, #FFFFFF, "How To Play");
 }
 
 // Function to reset and start a new game
@@ -22,11 +30,11 @@ void startGame() {
   enemies.clear();
   bullets.clear();
 
-  // Create game objects
+  // Draws your tank and the enemy tank
   playerTank = new Tank(50, 50, color(50, 150, 50));
   enemies.add(new EnemyTank(750, 550, color(150, 50, 50)));
 
-  // Boundary walls (keep tanks inside)
+  // Borders
   walls.add(new Wall(width/2, 0, width, 10));      // Top
   walls.add(new Wall(width/2, height, width, 10)); // Bottom
   walls.add(new Wall(0, height/2, 10, height));    // Left
@@ -47,18 +55,18 @@ void startGame() {
     float w, h;
     if (horizontal) {
       w = random(70, 200); // horizontal length
-      h = random(10, 15);              // fixed thickness
+      h = random(10, 15);              //  thickness
     } else {
-      w = random(10, 15);              // fixed thickness
+      w = random(10, 15);              //  thickness
       h = random(70, 200); // vertical length
     }
 
     Wall candidate = new Wall(x, y, w, h);
 
     // Ensure at least 100px away from player spawn
-    if (dist(x, y, playerTank.x, playerTank.y) < 100) continue;
+    if (dist(x, y, playerTank.x, playerTank.y) < 110) continue;
 
-    // Check overlap with existing walls (20px gap buffer)
+    // Check overlap with existing walls
     boolean overlaps = false;
     for (Wall w0 : walls) {
       if (abs(candidate.x - w0.x) < (candidate.w/2 + w0.w/2 + 50) &&
@@ -90,12 +98,20 @@ void draw() {
     break;
 
   case STATE_PAUSED:
-    updateGameLogic(); // Draw game state first
-    drawPauseScreen(); // Overlay pause screen
+    updateGameLogic();
+    drawPauseScreen();
     break;
 
   case STATE_ENDED:
     drawEndScreen();
+    break;
+
+  case STATE_CONTROLS:
+    drawControlScreen();
+    break;
+
+  case STATE_HOWTOPLAY:
+    drawHowToPlayScreen();
     break;
   }
 }
@@ -179,14 +195,43 @@ void drawStartScreen() {
   textAlign(CENTER, CENTER);
   textSize(48);
   fill(255);
-  text("TANK GAME", width/2, height/3);
-  text("CONTROLS", width/2, height/3 + 165);
+  text("TANK GAME", width/2, height/3 - 125);
+  textSize(30);
+  text("--Press [ENTER] to Start--", width/2, height/2 - 100);
+
+  for (int i=0; i<Control.length; i++) {
+    Control[i].display();
+  }
+
+  for (int i=0; i<HowToPlay.length; i++) {
+    HowToPlay[i].display();
+  }
+}
+
+void drawControlScreen() {
+  background(75);
+  textAlign(CENTER, CENTER);
+  fill(255);
+  textSize(48);
+  text("CONTROLS", width/2, height/3 + 20);
   textSize(24);
-  text("--Press [ENTER] to Start--", width/2, height/2 - 45);
   text("--Use W/S or Arrow key Up/Down to move--", width/2, height/2 + 105);
   text("--Use A/D or Arrow key Left/Right to turn--", width/2, height/2 + 135);
   text("--Press [P] to Pause during game--", width/2, height/2 + 165);
   text("--LeftMouse to shoot--", width/2, height/2 + 195);
+  text("--Press [1] to go back--", width/2, height/2 - 150);
+}
+
+void drawHowToPlayScreen() {
+  background(75);
+  textAlign(CENTER, CENTER);
+  textSize(48);
+  fill(255);
+  text("HOW TO PLAY", width/2, height/3 - 160);
+  textSize(24);
+  text("Your only goal is to kill the enemy tank! You and the enemy start on opposite ends of the arena, find them! Use the walls as cover!", width/2, height/2 + 105);
+  text("Use the walls as cover", width/2, height/2 + 125);
+  text("--Press [1] to go back--", width/2, height/2 - 150);
 }
 
 void drawPauseScreen() {
@@ -261,9 +306,34 @@ void keyReleased() {
     if (keyCode == 37) playerTank.turningLeft = false;
     if (keyCode == 39) playerTank.turningRight = false;
   }
+  if (key == ENTER || key == RETURN) {
+    if (gameState == STATE_START) startGame();
+  }
+  if (key == 'p' || key == 'P') {
+    if (gameState == STATE_PLAYING) gameState = STATE_PAUSED;
+    else if (gameState == STATE_PAUSED) gameState = STATE_PLAYING;
+  }
+  if (key == 'r' || key == 'R') {
+    if (gameState == STATE_ENDED) startGame();
+  }
+  if (key == '1') {
+    if (gameState == STATE_CONTROLS || gameState == STATE_HOWTOPLAY) {
+      gameState = STATE_START;
+    }
+  }
 }
 
+
 void mousePressed() {
+  if (gameState == STATE_START) {
+    if (Control[0].isClicked(mouseX, mouseY)) {
+      gameState = STATE_CONTROLS;
+    }
+    if (HowToPlay[0].isClicked(mouseX, mouseY)) {
+      gameState = STATE_HOWTOPLAY;
+    }
+  }
+
   // Shooting is only processed when PLAYING
   if (gameState == STATE_PLAYING) {
     if (mouseButton == LEFT) {
