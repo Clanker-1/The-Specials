@@ -1,3 +1,5 @@
+//Quinn, Franklin, and Henry contributed
+
 class Bullet {
   float x, y, angle, speed;
   int size = 5;
