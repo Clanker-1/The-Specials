@@ -1,3 +1,5 @@
+//Everybody contributed
+
 class Tank {
   float x, y, angle, turretAngle;
   float speed = 2.5;
@@ -19,9 +21,9 @@ class Tank {
   int lastShotTime = 0;
   int shootDelay = 30;
 
-  float recoilOffset = 0;       // how far back the muzzle is pushed
-  float recoilMax = 10;         // maximum recoil distance
-  float recoilRecoverySpeed = 1; // speed at which it returns
+  float recoilOffset = 0;       // How far back the muzzle is pushed
+  float recoilMax = 10;         // Maximum recoil distance
+  float recoilRecoverySpeed = 1; // Speed of muzzle recoil
 
   Tank(float startX, float startY, color c) {
     x = startX;
@@ -97,22 +99,32 @@ class Tank {
     translate(x, y);
     rotate(angle);
 
-    stroke(4);
+    stroke(0.2);
     fill(tankColor);
     rect(0, 0, size, size * 0.7);
+    fill(#E00B0B);
+    stroke(0.03);
+    rect(-15, 7, 4, 4);
+    rect(-15, -7, 4, 4);
+    noStroke();
+    fill(tankColor);
+    rect(0, 0, size-2, size * 0.66);
+    fill(255);
+    rect(12, 7, 1, 4);
+    rect(12, -8, 1, 4);
 
     pushMatrix();
     rotate(turretAngle - angle);
 
-    // Apply recoil offset to turret
+    // Apply recoil offset
     translate(-recoilOffset, 0);
-
+    stroke(0.2);
     fill(100, 100, 100);
-    rect(size * 0.35, 0, size * 0.7, size * 0.1);
+    rect(size * 0.36, 0, size * 0.71, size * 0.1);
     rect(0, 0, size * 0.6, size * 0.4);
     noStroke();
-    rect(size * 0.34, 0, size * 0.69, size * 0.09);
-    stroke(4);
+    rect(size * 0.35, 0, size * 0.7, size * 0.09);
+    stroke(0.2);
     popMatrix();
 
     popMatrix();
@@ -151,7 +163,7 @@ class Tank {
       // Recoil
       recoilOffset = recoilMax;
 
-      // Muzzle flash 
+      // Muzzle flash
       pushMatrix();
       translate(x, y);
       rotate(turretAngle);
