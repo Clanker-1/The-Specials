@@ -22,3 +22,11 @@
 - Franklin (@clanker-d15)
 - Henry (@Henryvoidstar)
 - Oskar (@)
+
+**Most recent changes:**
+
+**-New enemy tank AI (Very experimental)**
+
+**-Made an improved main menu (Not done)**
+
+**-Changed Tank look to tell which way the front of your tank is facing**
