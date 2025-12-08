@@ -1,6 +1,6 @@
 # Tank Game
 
-**In Tank Game, you face off against a tank in a small battlefeild with walls to use for cover!**
+**In Tank Game, you face off against a tank in a small encolsed arena!**
 
 
 
