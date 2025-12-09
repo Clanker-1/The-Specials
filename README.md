@@ -23,7 +23,7 @@
 - Quinn (@Clanker-1)
 - Franklin (@clanker-d15)
 - Henry (@Henryvoidstar)
-- Oskar (@)
+- Oskar (@oskarmilne80-lgtm)
 
 **Most recent changes:**
 
