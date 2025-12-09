@@ -24,7 +24,7 @@ void setup() {
   HowToPlay[0] = new MenuButtons(550, 300, 165, 40, #FFFFFF, "How To Play");
 }
 
-// Function to reset and start a new game
+// Reset and start mechanic
 void startGame() {
   walls.clear();
   enemies.clear();
@@ -34,7 +34,7 @@ void startGame() {
   playerTank = new Tank(50, 50, color(50, 150, 50));
   enemies.add(new EnemyTank(750, 550, color(150, 50, 50)));
 
-  // Borders
+  // Bordering walls
   walls.add(new Wall(width/2, 0, width, 10));      // Top
   walls.add(new Wall(width/2, height, width, 10)); // Bottom
   walls.add(new Wall(0, height/2, 10, height));    // Left
@@ -188,7 +188,7 @@ void updateGameLogic() {
 }
 
 
-// --- Functions to draw the specific screens ---
+// Draws specific screens
 
 void drawStartScreen() {
   background(50); // Dark background for start screen
@@ -258,7 +258,7 @@ void drawEndScreen() {
 }
 
 
-// --- Modified Input Handlers ---
+// Movement 
 
 void keyPressed() {
   // Movement input is only processed when PLAYING
@@ -323,6 +323,7 @@ void keyReleased() {
   }
 }
 
+// Buttons and shoot 
 
 void mousePressed() {
   if (gameState == STATE_START) {
@@ -342,7 +343,7 @@ void mousePressed() {
   }
 }
 
-
+// Wall Class
 class Wall {
   float x, y, w, h;
 
