@@ -19,7 +19,7 @@
 
 ![Running Project](https://github.com/Clanker-1/The-Specials/blob/main/Images/Showcase1.jpg)
 
-## Group
+# Group
 - Quinn (@Clanker-1)
 - Franklin (@clanker-d15)
 - Henry (@Henryvoidstar)
