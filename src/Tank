@@ -1,4 +1,4 @@
-//Everybody contributed
+// Everybody contributed
 
 class Tank {
   float x, y, angle, turretAngle;
@@ -9,9 +9,9 @@ class Tank {
   float hitBoxW = 30;
   float hitBoxH = 21;
 
-  float maxHealth = 100;
+  float maxHealth = 100; // Health
   float currentHealth;
-  boolean isAlive = true; // Track if the tank is active
+  boolean isAlive = true;
 
   boolean movingForward = false;
   boolean movingBackward = false;
@@ -19,7 +19,7 @@ class Tank {
   boolean turningRight = false;
 
   int lastShotTime = 0;
-  int shootDelay = 30;
+  int shootDelay = 30; // Delay for shooting
 
   float recoilOffset = 0;       // How far back the muzzle is pushed
   float recoilMax = 10;         // Maximum recoil distance
