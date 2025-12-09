@@ -11,7 +11,7 @@ class Bullet {
     angle = startAngle;
     speed = 9;
   }
-  // ... update(), display(), isOffScreen(), checkWallCollision() functions are the same ...
+ 
   void update() {
     x += cos(angle) * speed;
     y += sin(angle) * speed;
