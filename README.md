@@ -25,7 +25,7 @@
 - Henry (@Henryvoidstar)
 - Oskar (@oskarmilne80-lgtm)
 
-**Most recent changes:**
+**Most recent changes (Dec 9th, 2025):**
 
 -New enemy tank AI (Very experimental)
 
