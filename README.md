@@ -30,3 +30,10 @@
 -Changed Tank look to tell which way the front of your tank is facing
 
 -Renamed all the code
+
+
+
+
+
+
+#### Start the project from "TheSpecialsTankGameMain.pde" file
